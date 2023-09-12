@@ -1,0 +1,7 @@
+django
+django-bootstrap5
+django-crispy-forms
+whitenoise
+gunicorn
+websockets
+openai

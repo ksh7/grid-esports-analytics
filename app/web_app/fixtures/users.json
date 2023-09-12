@@ -1,0 +1,22 @@
+[
+    {
+      "model": "web_app.user",
+      "pk": 3,
+      "fields": {
+        "email": "user1@web-app.test",
+        "password": "pass",
+        "username": "u1_web_app",
+        "about": "User",
+        "name": "User 1"}
+    },
+    {
+      "model": "web_app.user",
+      "pk": 4,
+      "fields": {
+        "email": "user2@web-app.test",
+        "password": "pass",
+        "username": "u2_web_app",
+        "about": "User",
+        "name": "User 2"}
+    }
+  ]

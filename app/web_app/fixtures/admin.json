@@ -1,0 +1,26 @@
+[
+    {
+      "model": "web_app.user",
+      "pk": 1,
+      "fields": {
+        "email": "admin@web-app.test",
+        "password": "pass",
+        "username": "admin",
+        "is_superuser": true,
+        "is_staff": true,
+        "is_active": true,
+        "name": "Admin Web App"}
+    },
+    {
+      "model": "web_app.user",
+      "pk": 2,
+      "fields": {
+        "email": "staff@web-app.test",
+        "password": "pass",
+        "username": "staff",
+        "is_superuser": false,
+        "is_staff": true,
+        "is_active": true,
+        "name": "Staff Web App"}
+    }
+]

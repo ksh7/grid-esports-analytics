@@ -1,0 +1,938 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div x-data="appData()">
+  <div class="row">
+    <div class="col-xl-3 col-lg-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex fw-bold small mb-3">
+            <span class="flex-grow-1">Series ID: {{stream_id}}</span>
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col-7">
+              <h3 class="mb-0" x-text="gameName"></h3>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <div class="flex-fill fw-bold fs-16px">Game: <span x-text="games.length"></span></div>
+            <div class="flex-fill fw-bold fs-16px">Round: <span x-text="segments.length"></span></div>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-lg-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex fw-bold small mb-3">
+            <span class="flex-grow-1">Scores</span>
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col-7">
+              <h3 class="mb-0">Game: <span x-text="games.length"></span></h3>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <div class="flex-fill fw-bold fs-16px"><span x-text="teams[0].name"></span>: <span x-text="games[games.length - 1].teams[0].score"></span></div>
+            <div class="flex-fill fw-bold fs-16px"><span x-text="teams[1].name"></span>: <span x-text="games[games.length - 1].teams[1].score"></span></div>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-lg-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex fw-bold small mb-3">
+            <span class="flex-grow-1">Team #1 Status</span>
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col-7">
+              <h3 class="mb-0" x-text="teams[0].name"></h3>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <div class="flex-fill fw-bold fs-16px">Kills: <span x-text="teams[0].kills"></span></div>
+            <div class="flex-fill fw-bold fs-16px">Deaths: <span x-text="teams[0].deaths"></span></div>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex fw-bold small mb-3">
+            <span class="flex-grow-1">Team #2 Status</span>
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col-7">
+              <h3 class="mb-0" x-text="teams[1].name"></h3>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <div class="flex-fill fw-bold fs-16px">Kills: <span x-text="teams[1].kills"></span></div>
+            <div class="flex-fill fw-bold fs-16px">Deaths: <span x-text="teams[1].deaths"></span></div>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex fw-bold small mb-3">
+            <span class="flex-grow-1">Rounds Status - Kills by Teams</span>
+          </div>
+          <div class="mb-3">
+            <div id="chartContainer" style="height: 250px; width:100%;"></div>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row mt-5">
+    <div class="col-lg-6">
+      <div class="card mb-3">
+        <div class="card-header fw-bold small"><i class="fa fa-user fa-fw me-1"></i> Team: <span x-text="$store.teams_players[0].name"></span> Player Analytics</div>
+        <div class="card-body">
+          <table class="table">
+            <thead class="">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Kills</th>
+                <th scope="col">Deaths</th>
+                <th scope="col">Headshots</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="player in $store.teams_players[0].players">
+                <tr>
+                  <td x-text="player.name"></td>
+                  <td x-text="player.kills"></td>
+                  <td x-text="player.deaths"></td>
+                  <td x-text="player.headshots"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mb-3">
+        <div class="card-header fw-bold small"><i class="fa fa-users fa-fw me-1"></i> Team: <span x-text="$store.teams_players[1].name"></span> Player Analytics</div>
+        <div class="card-body">
+          <table class="table">
+            <thead class="">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Kills</th>
+                <th scope="col">Deaths</th>
+                <th scope="col">Headshots</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="player in $store.teams_players[1].players">
+                <tr>
+                  <td x-text="player.name"></td>
+                  <td x-text="player.kills"></td>
+                  <td x-text="player.deaths"></td>
+                  <td x-text="player.headshots"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-xl-4 col-lg-6">
+      <div class="card">
+        <div class="card-header fw-bold small">Weapons Analytics (Game: <span x-text="games.length"></span>, Round: <span x-text="segments.length"></span>) </div>
+        <div class="card-body">
+          Most Purchased: <span x-text="get_items_analysis()[2]"></span><br>
+          Most Picked: <span x-text="get_items_analysis()[0]"></span><br>
+          Most Dropped: <span x-text="get_items_analysis()[1]"></span><br>
+        </div>
+        
+        <!-- arrow -->
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="card">
+        <div class="card-header fw-bold small">Team: <span x-text="Object.keys(get_items_analysis()[3])[0]"></span> Weapon Analytics (Game: <span x-text="games.length"></span>, Round: <span x-text="segments.length"></span>)</div>
+        <div class="card-body">
+          Most Purchased: <span x-text="get_items_analysis()[3][Object.keys(get_items_analysis()[3])[0]].mostDropped"></span><br>
+          Most Picked: <span x-text="get_items_analysis()[3][Object.keys(get_items_analysis()[3])[0]].mostPickedUp"></span><br>
+          Most Dropped: <span x-text="get_items_analysis()[3][Object.keys(get_items_analysis()[3])[0]].mostPurchased"></span><br>
+        </div>
+        
+        <!-- arrow -->
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="card">
+        <div class="card-header fw-bold small">Team: <span x-text="Object.keys(get_items_analysis()[3])[1]"></span> Weapon Analytics (Game: <span x-text="games.length"></span>, Round: <span x-text="segments.length"></span>)</div>
+        <div class="card-body">
+          Most Purchased: <span x-text="get_items_analysis()[3][Object.keys(get_items_analysis()[3])[1]].mostDropped"></span><br>
+          Most Picked: <span x-text="get_items_analysis()[3][Object.keys(get_items_analysis()[3])[1]].mostPickedUp"></span><br>
+          Most Dropped: <span x-text="get_items_analysis()[3][Object.keys(get_items_analysis()[3])[1]].mostPurchased"></span><br>
+        </div>
+        
+        <!-- arrow -->
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+
+  <div class="row mt-5 mb-10">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header fw-bold ">ChatGPT Analytics</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-xl-8">
+              <div class="form-group mb-3">
+                <label class="form-label">Select Analytics Prompt</label>
+                <select class="form-select" id="analyticsPromptSelect">
+                  <option value="1">Which player has done most kills?</option>
+                  <option value="2">Which player has done most damage?</option>
+                  <option value="3">Which player has suffered most damage?</option>
+                  <option value="4">Which is most purchased weapon by each team?</option>
+                  <option value="5">Which player has done most weapon purchase among all?</option>
+                  <option value="6">Which player has done most weapon purchase in each team?</option>
+                  <option value="7">Which is most dropped weapon by each team?</option>
+                  <option value="8">Which is most picked up weapon by each team?</option>
+                  <option disabled>--------------------------------------------------------------------------------------------</option>
+                  <option disabled>-------------- Below given very large dataset context NOT supported in free version --------------</option>
+                  <option disabled>Among all rounds till now, which team is likely to win? (NOT supported in free version)</option>
+                  <option disabled>Which player is making a strong come back in a clutch situation? (NOT supported in free version)</option>
+                  <option disabled>Among all rounds, which player has best Kill to Death ratio? (NOT supported in free version)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xl-4">
+              <div class="form-group mb-4">
+                <label class="form-label">Select Game Round</label>
+                <select class="form-select" id="gameRoundSelect">
+                  <template x-for="item in $store.game_rounds_events.rounds" :key="item.round_id">
+                    <option x-bind:value="item.game_number + '---' + item.round_id">
+                      <span x-text="'Game ' + item.game_number + ' - ' + item.round_id"></span>
+                    </option>
+                  </template>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-theme mt-2" id="submitChatGPT">Submit to ChatGPT</button>
+
+          <div id="loader" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          
+          <div id="resultCard" style="display: none;" class="mt-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">ChatGPT Response & Analytics</h5>
+                <div id="resultResponse"></div>
+                <button type="button" class="btn btn-sm btn-outline-secondary mt-3" id="clearGPTResponse">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <p class="mt-3">Note: These are basic prompts sent along with smaller context of game data, so responses are limited to particular round and not entire game. We'll improve context size and conversation history to generate more accurate insights across entire game datasets.</p>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header fw-bold small">Best Player of Round (Most Kills)</div>
+        <div class="card-body">
+          <div class="row">
+            <template x-for="round in $store.most_kills_analysis_data">
+              <div class="col-lg-2">
+                <div class="card mb-1">
+                  <div class="card-header fw-bold small">
+                    <span x-text="round.kills"></span> kills by <span x-text="round.actor"></span> <br>(game-<span x-text="round.game_number"></span>, <span x-text="round.round_id"></span>)
+                  </div>
+                  <div class="card-arrow">
+                    <div class="card-arrow-top-left"></div>
+                    <div class="card-arrow-top-right"></div>
+                    <div class="card-arrow-bottom-left"></div>
+                    <div class="card-arrow-bottom-right"></div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-xl-2 col-lg-2">
+      <div class="card">
+        <div class="card-header fw-bold small">Kill-Death Ratio</div>
+        <div class="card-body">
+          To be updated...
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-2">
+      <div class="card">
+        <div class="card-header fw-bold small">Planting Success Rate</div>
+        <div class="card-body">
+          To be updated...
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-2">
+      <div class="card">
+        <div class="card-header fw-bold small">Headshot Percentage</div>
+        <div class="card-body">
+          To be updated...
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-2">
+      <div class="card">
+        <div class="card-header fw-bold small">1st Kill Success Rate</div>
+        <div class="card-body">
+          To be updated...
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-2">
+      <div class="card">
+        <div class="card-header fw-bold small">Clutch Combacks</div>
+        <div class="card-body">
+          To be updated...
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-2">
+      <div class="card">
+        <div class="card-header fw-bold small">First Blood Rate</div>
+        <div class="card-body">
+          To be updated...
+        </div>
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="row mt-5">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-header fw-bold small">Live Events</div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-3 text-inverse text-opacity-50">Scroll through events to see what's going on in the game:</h6>
+          <div style="height: 200px; overflow-y: auto;">
+            
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Game</th>
+                <th scope="col">Round</th>
+                <th scope="col">Action</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="game_round in $store.game_rounds.rounds">
+                <template x-for="event in game_round.round_actions">
+                  <tr>
+                    <td> Game: <span x-text="game_round.game_number"></span></td>
+                    <td x-text="game_round.round_id"></td>
+                    <td x-text="event.type"></td>
+                    <td>
+                      <strong><span x-text="event.data.actor"></span></strong> 
+                      from Team <span x-text="event.data.team"></span> 
+    
+                      <span x-text="event.data.action"></span>
+    
+                      <template x-if="event.type === 'item'"> 
+                        <span x-text="event.data.item"></span>
+                      </template>
+    
+                      <template x-if="event.type === 'combat'"> 
+                        <strong><span x-text="event.data.target"></span></strong> 
+                      </template>
+                      <template x-if="event.type === 'combat'"> 
+                        <span x-text="'from Team'"></span>
+                      </template>
+                      <template x-if="event.type === 'combat'"> 
+                         <span x-text="event.data.target_team"></span>
+                      </template>
+                    </td>
+                  </tr>
+                </template>
+              </template>
+              
+            </tbody>
+          </table>
+        </div>
+
+        </div>
+        
+        <!-- arrow -->
+        <div class="card-arrow">
+          <div class="card-arrow-top-left"></div>
+          <div class="card-arrow-top-right"></div>
+          <div class="card-arrow-bottom-left"></div>
+          <div class="card-arrow-bottom-right"></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+
+    <script>
+
+      function appData() {
+        return {
+          data: [],
+          gameName: "",
+          segments: [],
+          games: [],
+          teams: [],
+          most_kills_analysis: function(round){
+
+            const roundResults = [];
+
+            // Alpine.store("game_rounds").rounds.forEach((round) => {
+              const gameNumber = round.game_number;
+              const roundId = round.round_id;
+              const roundActions = round.round_actions;
+              const actorKilledCounts = {};
+              
+              roundActions.forEach((action) => {
+                if (action.type === 'combat' && action.data.action === 'killed') {
+                  const actor = action.data.actor;
+                  const team = action.data.team;
+                  actorKilledCounts[`${actor}-${team}`] = (actorKilledCounts[`${actor}-${team}`] || 0) + 1;
+                }
+              });
+              let mostKills = 0;
+              let mostKillsActor = '';
+              let mostKillsTeam = '';
+              
+              for (const key in actorKilledCounts) {
+                const kills = actorKilledCounts[key];
+                
+                if (kills > mostKills) {
+                  mostKills = kills;
+                  [mostKillsActor, mostKillsTeam] = key.split('-');
+                }
+              }
+              Alpine.store('most_kills_analysis_data').push({
+                round_id: roundId,
+                game_number: gameNumber,
+                actor: mostKillsActor,
+                team: mostKillsTeam,
+                kills: mostKills
+              });
+            // });
+
+            // return roundResults;
+          },
+
+          get_items_analysis: function() {
+            const pickedUpItems = {};
+            const droppedItems = {};
+            const purchasedItems = {};
+            const teamPickedUpItems = {};
+            const teamDroppedItems = {};
+            const teamPurchasedItems = {};
+
+            function findMostCommonItem(itemObject) {
+              let mostCommonItem = null;
+              let maxOccurrences = 0;
+
+              for (const item in itemObject) {
+                if (itemObject[item] > maxOccurrences) {
+                  mostCommonItem = item;
+                  maxOccurrences = itemObject[item];
+                }
+              }
+
+              return mostCommonItem;
+            }
+
+            for (const data of Alpine.store("game_rounds").rounds) {
+              for (const action of data.round_actions) {
+                if (action.type === "item") {
+                  const item = action.data.item;
+                  const actionType = action.data.action;
+                  const team = action.data.team;
+                  
+                  if (actionType === "pickedUp") {
+                    pickedUpItems[item] = (pickedUpItems[item] || 0) + 1;
+                    teamPickedUpItems[team] = teamPickedUpItems[team] || {};
+                    teamPickedUpItems[team][item] = (teamPickedUpItems[team][item] || 0) + 1;
+                  } else if (actionType === "dropped") {
+                    droppedItems[item] = (droppedItems[item] || 0) + 1;
+                    teamDroppedItems[team] = teamDroppedItems[team] || {};
+                    teamDroppedItems[team][item] = (teamDroppedItems[team][item] || 0) + 1;
+                  } else if (actionType === "purchased") {
+                    purchasedItems[item] = (purchasedItems[item] || 0) + 1;
+                    teamPurchasedItems[team] = teamPurchasedItems[team] || {};
+                    teamPurchasedItems[team][item] = (teamPurchasedItems[team][item] || 0) + 1;
+                  }
+                }
+              }
+            }
+
+            const result = [
+              findMostCommonItem(pickedUpItems),
+              findMostCommonItem(droppedItems),
+              findMostCommonItem(purchasedItems),
+            ];
+
+            const teamResults = {};
+
+            for (const team in teamPickedUpItems) {
+              teamResults[team] = {
+                mostPickedUp: findMostCommonItem(teamPickedUpItems[team]),
+                mostDropped: findMostCommonItem(teamDroppedItems[team]),
+                mostPurchased: findMostCommonItem(teamPurchasedItems[team]),
+              };
+            }
+
+            result.push(teamResults);
+
+            return result;
+
+
+          },
+
+          init() {
+            Alpine.store('most_kills_analysis_data', []);
+            $("#clearGPTResponse").click(function() {
+              $("#resultResponse").html("");
+              $("#resultCard").hide();
+            });
+
+            $("#submitChatGPT").click(function() {
+              $("#resultCard").hide();
+              $("#submitChatGPT").prop("disabled", true);
+              $("#resultResponse").hide();
+              $("#loader").show();
+          
+              // TODO: use larger dataset.
+              const matchingObject = Alpine.store("game_rounds").rounds.find(obj => obj.game_number === parseInt($("#gameRoundSelect").val().split("---")[0]) && obj.round_id === $("#gameRoundSelect").val().split("---")[1]);
+
+              let eventsData = null;
+              if (matchingObject) {
+                eventsData = matchingObject.round_actions; // TODO: use larger dataset.
+              }
+
+              if (!eventsData){
+                $("#resultCard").hide();
+                $("#resultResponse").hide();
+                $("#submitChatGPT").prop("disabled", false);
+                $("#loader").hide();
+                return false;
+              }
+              
+              var data = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                analyticsPrompt: $("#analyticsPromptSelect").val(),
+                roundDataSet: JSON.stringify(eventsData),
+              };
+          
+              $.ajax({
+                url: '/chat_gpt_prompt_select',
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                  $("#loader").hide();
+                  $("#resultCard").show();
+                  $("#resultResponse").html(response.result).show();
+                  $("#submitChatGPT").prop("disabled", false);
+                },
+                error: function(xhr, status, error) {
+                  $("#loader").hide();
+                  $("#submitChatGPT").prop("disabled", true);
+                }
+              });
+            });
+            Alpine.store('teams_players', []);
+            Alpine.store("game_rounds_events", {
+              rounds: [],
+              newRound: {},
+              addRound(round) {
+                this.rounds.push(round);
+                this.newRound = {};
+              }
+            });
+            Alpine.store("game_rounds", {
+              rounds: [],
+              newRound: {},
+              addRound(round) {
+                this.rounds.push(round);
+                this.newRound = {};
+              }
+            });
+
+            var dataPoints1 = []
+            var dataPoints2 = []
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                axisY: {
+                    gridColor: "transparent",
+                    labelFontColor: "white",
+                    title: "Kills",
+                    titleFontColor: "white"
+                },
+                axisX: {
+                  labelFontColor: "white",
+                  title: "Rounds",
+                  titleFontColor: "white"
+                },
+                backgroundColor: "transparent",
+                data: [
+                    {
+                        type: "column",
+                        color: "rgba(60, 210, 165, 0.65)",
+                        name: "Team 1 (counter-terrorists)",
+                        showInLegend: true,
+                        dataPoints: dataPoints2,
+                        toolTipContent: "Team 1 - {y} Kills",
+                        
+                    },
+                    {
+                        type: "column",
+                        color: "rgba(255, 255, 255, 0.25)",
+                        name: "Team 2 (terrorists)",
+                        showInLegend: true,
+                        dataPoints: dataPoints1,
+                        toolTipContent: "Team 2 - {y} Kills"
+                    }
+                ]
+            });
+
+            chart.render();
+
+            function getRoundInfo(data) {
+              const rounds = data.filter((item) => item.type === "round" &&  item.finished === true);
+
+              const roundInfo = rounds.map((round) => {
+                const sequenceNumber = round.sequenceNumber;
+                const teams = round.teams;
+
+                let team1Kills = 0;
+                let team2Kills = 0;
+
+                teams.forEach((team) => {
+                  if (team.side === "terrorists") {
+                    team1Kills = team.kills;
+                  } else {
+                    team2Kills = team.kills;
+                  }
+                });
+
+                return {
+                  sequenceNumber,
+                  team1Kills,
+                  team2Kills,
+                };
+              });
+
+              return roundInfo;
+            }
+
+
+            // Establish a WebSocket connection
+            const socket = new WebSocket('wss://grid.aenv.site:8080/{{stream_id}}');
+
+            let rounds_info = { "game_number": 0, "round_id": 0, "rounds_data": [] };
+            let events_info = { "game_number": 0, "round_id": 0, "events_data": [] };
+            
+            // Handle incoming data from the WebSocket stream
+            socket.addEventListener('message', (event) => {
+                this.data = JSON.parse(event.data);
+                if (this.data.events[0].seriesState) {
+                  this.gameName = this.data.events[0].seriesState.title.nameShortened.toUpperCase();
+                  this.teams = this.data.events[0].seriesState.teams;
+                  this.games = this.data.events[0].seriesState.games;
+                  this.segments = this.data.events[0].seriesState.games[this.games.length - 1].segments;
+
+                  if (this.segments.length > 0) {
+                    var roundInfo  = getRoundInfo(this.segments);
+                    for (let i = 0; i < roundInfo.length; i++) {
+
+                      var round_exists1 = false;
+                      for (let y = 0; y < dataPoints1.length; y++) {
+                        if (dataPoints1[y].label === roundInfo[i].sequenceNumber){
+                          round_exists1 = true;
+                        }
+                      }
+                      if (!round_exists1) {
+                        dataPoints1.push({label: roundInfo[i].sequenceNumber, y: roundInfo[i].team1Kills});
+                      }
+
+                      var round_exists2 = false;
+                      for (let y = 0; y < dataPoints2.length; y++) {
+                        if (dataPoints2[y].label === roundInfo[i].sequenceNumber){
+                          round_exists2 = true;
+                        }
+                      }
+                      if (!round_exists2) {
+                        dataPoints2.push({label: roundInfo[i].sequenceNumber, y: roundInfo[i].team2Kills});
+                      }
+                    }
+
+                  }
+                  chart.render();
+                }
+
+                
+                if (this.data.events[0].type === "game-started-round") {
+                    rounds_info = { "game_number": 0, "round_id": 0, "rounds_data": [] };
+                    events_info = { "game_number": 0, "round_id": 0, "events_data": [] };
+                }
+
+                if (this.data.events[0].type === "game-ended-round") {
+                    if (rounds_info.rounds_data.length > 0) {
+                        const round_actions = [];
+
+                        const teamIdToName = {};
+                        for (const team of this.teams) {
+                          teamIdToName[team.id] = team.name;
+                        }
+
+                        for (const _round of rounds_info.rounds_data) {
+                          if (["player-dropped-item", "player-pickedUp-item", "player-purchased-item"].includes(_round.type)) {
+                            round_actions.push({
+                              type: "item",
+                              data: {
+                                actor: _round.actor.state.name,
+                                team: teamIdToName[_round.actor.state.teamId],
+                                action: _round.action,
+                                item: _round.target.id,
+                              },
+                            });
+                          }
+
+                          if (["player-damaged-player", "player-killed-player"].includes(_round.type)) {
+                            round_actions.push({
+                              type: "combat",
+                              data: {
+                                actor: _round.actor.state.name,
+                                team: teamIdToName[_round.actor.state.teamId],
+                                action: _round.action,
+                                target: _round.target.state.name,
+                                target_team: teamIdToName[_round.target.state.teamId],
+                              },
+                            });
+                          }
+                        }
+                        var _round_info_data = {game_number: rounds_info.game_number, round_id:rounds_info.round_id, round_actions: round_actions};
+                        var _round_events_info_data = {game_number: rounds_info.game_number, round_id:rounds_info.round_id, events_data: rounds_info.rounds_data};
+                        Alpine.store("game_rounds").addRound(_round_info_data);
+                        Alpine.store("game_rounds_events").addRound(_round_events_info_data);
+                        this.get_items_analysis();
+                        this.most_kills_analysis(_round_info_data);
+                    }
+                    rounds_info = { "game_number": 0, "round_id": 0, "rounds_data": [] };
+                    events_info = { "game_number": 0, "round_id": 0, "events_data": [] };
+                }
+
+                if (this.data.events[0].type.includes("player-")) {
+                    let _round_data = {
+                        "type": this.data.events[0].type,
+                        "actor": this.data.events[0].actor,
+                        "action": this.data.events[0].action,
+                        "target": this.data.events[0].target,
+                        "team_state": []
+                    };
+
+                    if (this.data.events[0].seriesState) {
+                        let games = this.data.events[0].seriesState.games;
+
+                        if (games.length > 0) {
+                            let segments_data = games[games.length - 1].segments;
+
+                            if (segments_data.length > 0) {
+                                rounds_info.game_number = games.length;
+                                rounds_info.round_id = segments_data[segments_data.length - 1].id;
+                                _round_data.team_state = segments_data[segments_data.length - 1].teams;
+                                rounds_info.rounds_data.push(_round_data);
+                            }
+                        }
+                    }
+                }
+
+
+                if (this.data.events[0]["type"] === "player-killed-player"){
+
+                  const json_data = this.data.events[0];
+                  
+                  let teams_data = [];
+                  if (json_data.seriesState && json_data.seriesState.teams) {
+                    json_data.seriesState.teams.forEach((team) => {
+                      const players = team.players.map((player) => ({
+                        name: player.name,
+                        id: player.id,
+                        kills: player.kills,
+                        deaths: player.deaths,
+                        headshots: player.headshots,
+                      }));
+
+                      players.sort((a, b) => ((b.kills/b.deaths) - (a.kills/a.deaths)));
+
+                      teams_data.push({
+                        id: team.id,
+                        name: team.name,
+                        score: team.score,
+                        players: players
+                      });
+                    });
+                  }
+
+                  Alpine.store('teams_players', teams_data);
+                }
+
+
+            });
+          },
+        };
+      }
+
+      
+    </script>
+
+    <script>
+      // Initialize Alpine.js
+      Alpine.start();
+    </script>
+
+</div>
+
+
+
+{% endblock %}

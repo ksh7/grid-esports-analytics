@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+  {% for match in matches %}
+  <div class="col-xl-3 col-lg-6">
+    <div class="card mb-3">
+      <div class="card-header fw-bold small"><i class="fa fa-trophy fa-fw me-1"></i> CCT-Online-Finals-1</div>
+      <div class="card-body">
+        <div class="row align-items-center mb-2">
+          <div class="col-7">
+            <h3 class="mb-0">CS GO</h3>
+          </div>
+          <div class="col-5">
+            <div class="mt-n2" data-render="apexchart" data-type="line" data-title="Visitors" data-height="30"></div>
+          </div>
+        </div>
+        <div class="small text-inverse text-opacity-50 text-truncate">
+          <i class="fa fa-gamepad fa-fw me-1"></i> ID: {{match.game_id}}<br>
+          <i class="fa fa-users fa-fw me-1"></i> {{match.statistics.0.name }} vs {{match.statistics.1.name }}
+        </div>
+        <div class="mt-3">
+          <a href="{% url 'game_stream' match.game_id %}" class="btn btn-outline-theme btn-sm mx-2">View Stream</a>
+        </div>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <div class="col-xl-3 col-lg-6">
+    <div class="card mb-3">
+      <div class="card-header fw-bold small"><i class="fa fa-trophy fa-fw me-1"></i> CCT-Online-Finals-1</div>
+      <div class="card-body">
+        <div class="row align-items-center mb-2">
+          <div class="col-12">
+            <h3 class="mb-0">Upcoming...</h3>
+          </div>
+        </div>
+        <div class="small text-inverse text-opacity-50 text-truncate">
+          <i class="fa fa-gamepad fa-fw me-1"></i> Keep checking for upcoming matches...<br><br>
+
+        </div>
+        <div class="mt-3">
+          <a href="#" class="card-link">Refresh</a>
+        </div>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% for match in matches %}
+<div class="row mt-5">
+  <div class="col-lg-2">
+    <div class="card mb-3">
+      <div class="card-header fw-bold small"><i class="fa fa-user fa-fw me-1"></i>Game ID: {{match.game_id}}</div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>{{match.statistics.0.name }}</strong> vs <strong>{{match.statistics.1.name }}</strong></li>
+          <li class="list-group-item">Winner: {% if match.statistics.0.score %} {{match.statistics.0.name }} {% endif %} {% if match.statistics.1.score %} {{match.statistics.1.name }} {%endif %} </li>
+          <li class="list-group-item">Rounds: {{match.rounds}}</li>
+          <li class="list-group-item">Date: {{match.date}}</li>
+          <li class="list-group-item"><a href="{% url 'game_stream' match.game_id %}" class="card-link">View Stream</a></li>
+        </ul>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card mb-3">
+      <div class="card-header fw-bold small"><i class="fa fa-user fa-fw me-1"></i>Team: {{match.statistics.0.name }} Player Analytics</div>
+      <div class="card-body">
+        <table class="table table-borderless table-sm">
+          <thead class="">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Kills</th>
+              <th scope="col">Deaths</th>
+              <th scope="col">Headshots</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for player in match.statistics.0.players %}
+              <tr>
+                <td>{{player.name}}</td>
+                <td>{{player.kills}}</td>
+                <td>{{player.deaths}}</td>
+                <td>{{player.headshots}}</td>
+              </tr>
+            {% endfor %} 
+          </tbody>
+        </table>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card mb-3">
+      <div class="card-header fw-bold small"><i class="fa fa-users fa-fw me-1"></i>Team: {{match.statistics.1.name }} Player Analytics</div>
+      <div class="card-body">
+        <table class="table table-borderless table-sm">
+          <thead class="">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Kills</th>
+              <th scope="col">Deaths</th>
+              <th scope="col">Headshots</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for player in match.statistics.1.players %}
+              <tr>
+                <td>{{player.name}}</td>
+                <td>{{player.kills}}</td>
+                <td>{{player.deaths}}</td>
+                <td>{{player.headshots}}</td>
+              </tr>
+            {% endfor %} 
+          </tbody>
+        </table>
+      </div>
+      <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

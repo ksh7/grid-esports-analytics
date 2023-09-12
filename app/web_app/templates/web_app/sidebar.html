@@ -1,0 +1,46 @@
+{% load static %}
+<div id="sidebar" class="app-sidebar">
+    <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+      <div class="menu">
+        <div class="menu-header">Explore</div>
+        <div class="menu-item active">
+          <a href="/" class="menu-link">
+          <span class="menu-icon"><i class="bi bi-cpu"></i></span>
+          <span class="menu-text">Home</span>
+          </a>
+        </div>
+        <div class="menu-item">
+          <a href="{% url 'live_games' %}" class="menu-link">
+          <span class="menu-icon"><i class="bi bi-controller"></i></span>
+          <span class="menu-text">Live Games</span>
+          </a>
+        </div>
+        <div class="menu-item has-sub">
+          <a href="#" class="menu-link">
+          <span class="menu-icon">
+          <i class="bi bi-bar-chart"></i>
+          </span>
+          <span class="menu-text">Game Analytics</span>
+          <span class="menu-caret"><b class="caret"></b></span>
+          </a>
+          <div class="menu-submenu">
+            {% for match in matches %}
+            <div class="menu-item">
+              <a href="{% url 'game_stream' match.game_id %}" class="menu-link">
+              <span class="menu-text">Game ID: {{match.game_id}}</span>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="menu-item">
+          <a href="{% url 'download_reports' %}" class="menu-link">
+          <span class="menu-icon"><i class="bi bi-file-earmark-text"></i></span>
+          <span class="menu-text">Download Reports</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>

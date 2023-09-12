@@ -1,0 +1,5 @@
+__pycache__
+*.pyc
+test/data/*
+db.sqlite3
+data_files/

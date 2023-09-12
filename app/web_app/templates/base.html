@@ -1,0 +1,43 @@
+{% load django_bootstrap5 %}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <title>GRID Analytics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content>
+  <meta name="author" content>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  {% bootstrap_css %}
+  <link href="/static/css/vendor.min.css" rel="stylesheet">
+  <link href="/static/css/jquery-jvectormap.css" rel="stylesheet">
+  <link href="/static/css/app.min.css" rel="stylesheet">
+  {% bootstrap_javascript %}
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.5/perfect-scrollbar.min.js" integrity="sha512-X41/A5OSxoi5uqtS6Krhqz8QyyD8E/ZbN7B4IaBSgqPLRbWVuXJXr9UwOujstj71SoVxh5vxgy7kmtd17xrJRw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/static/js/app.min.js"></script>
+  <script src="/static/js/apexcharts.min.js"></script>
+  <script src="/static/js/jquery-jvectormap.min.js"></script>
+  <script src="/static/js/world-mill.js"></script>
+  <script src="https://unpkg.com/alpinejs@3.13.0/dist/cdn.min.js"></script>
+  <script src="/static/js/chart.umd.js"></script>
+  <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+
+  
+</head>
+<body>
+  <div id="app" class="app">
+    {% include 'web_app/header.html' %}
+    {% include 'web_app/sidebar.html' %}
+    
+    
+    <div id="content" class="app-content">
+      {% block content %} {% endblock %}
+    </div>
+    {% include 'web_app/app_theme.html' %}
+    <a href="#" data-toggle="scroll-to-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
+  </div>
+</body>
+</html>
